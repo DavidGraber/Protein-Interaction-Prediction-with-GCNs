@@ -1,2 +1,6 @@
 mt_env/
 __pycache__
+requirements.txt
+
+model_graph_classification.ipynb
+model_graph_classification_regr.ipynb
