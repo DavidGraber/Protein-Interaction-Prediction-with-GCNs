@@ -19,7 +19,7 @@ source_dir_cord = 'C:/Users/david/MT_data/masif_site_outputs/predcoords'
 source_dir_pdbs = 'C:/Users/david/MT_data/alphafold_outputs/pdbs'
 
 ### Select a mutant to extract a patch from
-to_extract = [file[0:4] for file in os.listdir('c:\\Users\\david\\MT_data\\extracted_patches\\mutants')]
+to_extract = [file[0:4] for file in os.listdir('c:\\Users\\david\\MT_data\\extracted_patches\\mutants')[1344:]]
 
 for mutant_name in to_extract:
 
