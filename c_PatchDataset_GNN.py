@@ -7,9 +7,10 @@ from torch_geometric.data import Data
 
 class PatchDataset(Dataset):
 
-    '''Custom dataset for grouping graphs extracted from protein surfaces into mini-batches.
-    Returns an instance of the torch_geometric.Data class which contains all information to 
-    describe a homogeneous graph:  
+    '''Custom dataset for generation of datasets of graphs extracted from protein surfaces.
+    Data_dir should contain instances of the GraphPatch class stored as pkl files with the characters
+    0-4 of the filename indicating the mutant name. The function get_item returns an instance of the
+    torch_geometric.Data class which contains all information to describe a homogeneous graph:  
     - node features x
     - edge index 
     - edge attributes (edge_weight)
