@@ -7,19 +7,19 @@ from f_extract_surface_patch_GNN import *
 from f_helper_functions import *
 from c_GraphPatch import GraphPatch
 
-os.chdir('c:\\Users\\david\\MT_code\\data')
+os.chdir('c:\\Users\\david\\MT_data')
 fitness = np.load('fitness_dict_1500.npy', allow_pickle="TRUE").item()
 
-predfeatures_dir = [file for file in os.listdir('c:\\Users\\david\\MT_code\\data\\masif_site_outputs\\predfeatures')]
-predcoords_dir = [file for file in os.listdir('c:\\Users\\david\\MT_code\\data\\masif_site_outputs\\predcoords')]
-pdbs_dir = [file for file in os.listdir('c:\\Users\\david\\MT_code\\data\\alphafold_outputs\\pdbs')]
+predfeatures_dir = [file for file in os.listdir('c:\\Users\\david\\MT_data\\masif_site_outputs\\predfeatures')]
+predcoords_dir = [file for file in os.listdir('c:\\Users\\david\\MT_data\\masif_site_outputs\\predcoords')]
+pdbs_dir = [file for file in os.listdir('c:\\Users\\david\\MT_data\\alphafold_outputs\\pdbs')]
 
-source_dir_feat = 'C:/Users/david/MT_code/data/masif_site_outputs/predfeatures'
-source_dir_cord = 'C:/Users/david/MT_code/data/masif_site_outputs/predcoords'
-source_dir_pdbs = 'C:/Users/david/MT_code/data/alphafold_outputs/pdbs'
+source_dir_feat = 'C:/Users/david/MT_data/masif_site_outputs/predfeatures'
+source_dir_cord = 'C:/Users/david/MT_data/masif_site_outputs/predcoords'
+source_dir_pdbs = 'C:/Users/david/MT_data/alphafold_outputs/pdbs'
 
 ### Select a mutant to extract a patch from
-to_extract = [file[0:4] for file in os.listdir('c:\\Users\\david\\MT_code\\data\\extracted_patches\\mutants')]
+to_extract = [file[0:4] for file in os.listdir('c:\\Users\\david\\MT_data\\extracted_patches\\mutants')]
 
 for mutant_name in to_extract:
 
@@ -63,21 +63,12 @@ for mutant_name in to_extract:
     #print(center_index)
 
     # Extract the patch as graph
-    coords, geo_dist_matrix, A, edge_index, edge_weight, feature_matrix = extract_surface_patch_GNN(predcoords, center_index, 12, features)
+    coords, edge_data, A, edge_index, edge_weight, feature_matrix = extract_surface_patch_GNN(predcoords, center_index, 12, features)
+
     
     fitness_value = fitness[mutant_name]
+    patch = GraphPatch(feature_matrix, A, edge_index, edge_weight, edge_data, fitness_value, coords, mutant_name)
 
-    # To make a classification task of it
-    ###########################################################
-    #if fitness_value > 0.5:
-    #    fitness_value = 1
-    #else: 
-    #    fitness_value = 0
-    ###########################################################
-
-    patch = GraphPatch(feature_matrix, A, edge_index, edge_weight, geo_dist_matrix, fitness_value, coords, mutant_name)
-
-    #os.chdir('c:\\Users\\david\\MT_code\\data\\extracted_patches\\mutant_graphs')
-    os.chdir('H:\My Drive\mutant_graphs_classification')
+    os.chdir("C:\\Users\\david\\MT_data\\extracted_patches\\mutant_graphs_with_weights")
     filename = '{m}_GraphPatch.pkl'.format(m=mutant_name)
     save_object(patch, filename)
