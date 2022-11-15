@@ -32,7 +32,7 @@ class PatchDataset(Dataset):
         x = torch.from_numpy(patch.features)
         edge_index=torch.from_numpy(patch.edge_index)
         edge_weight=torch.from_numpy(patch.edge_weight)
-        y=torch.from_numpy(patch.fitness.astype(np.int64))
+        y=torch.from_numpy(patch.fitness)
         pos=torch.from_numpy(patch.coords)
 
         return  Data(x, edge_index, edge_weight, y, pos)
