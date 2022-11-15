@@ -1,6 +1,8 @@
 import numpy as np
 from sklearn.neighbors import NearestNeighbors
 import open3d as o3d
+from torch.nn import Softmin
+import torch
 
 
 def generate_simple_graph(indeces, coords_sel, normals):
@@ -35,65 +37,6 @@ def generate_simple_graph(indeces, coords_sel, normals):
 
 
 
-def generate_GNN_graph(patch_coords, patch_normals, patch_features):
-
-    '''Function that takes a set of points, with their label, coordinates and surface normals. Calculates for each point the 
-    geodesic distance to its n nearest neighbors and saves that information in a dictionary representing a graph. '''
-    
-    #Initialize geodesic distances matrix
-    geo_dist_matrix = np.full((len(patch_coords), len(patch_coords)), np.inf)
-
-    edges = []
-    
-    #Initialize Adjacency Matrix
-    A = np.identity(n = len(patch_coords), dtype=np.float64)
-
-    #Initialize K-Nearest-Neighbor Search
-    knn = NearestNeighbors(n_neighbors=10)
-    knn.fit(patch_coords)
-
-    #loop through each point that is within the radius and find its nearest neighbors and their euclidean distance
-    for idx, point in enumerate(patch_coords):
-        dist, neighbors = knn.kneighbors([point], return_distance=True)
-                
-        # loop through the nearest neighbors, calculate their geodesic distance to the point chosen above
-        # Add the geodesic distance to the distance matrix
-
-        for index, neighbor in enumerate(neighbors[0]):
-            
-            geo_dist = dist[0][index]*(2-np.dot(patch_normals[idx], patch_normals[neighbor]))
-            
-
-            if geo_dist !=0:
-
-                geo_dist_matrix[idx][neighbor]=geo_dist
-                geo_dist_matrix[neighbor][idx]=geo_dist
-
-                A[idx][neighbor] = 1
-                A[neighbor][idx] = 1
-
-                if (neighbor, idx) not in edges:
-                    edges.append((idx, neighbor))
-
-
-    #Initialize Edge Weights and Edge_Index
-    edge_weight = []
-    edge_index = [[],[]]
-    
-    for node1, node2 in edges: 
-        edge_index[0].append(node1)
-        edge_index[1].append(node2)
-        edge_weight.append(geo_dist_matrix[node1][node2])
-
-        
-    edge_index = np.asarray(edge_index)
-    edge_weight = np.asarray(edge_weight)
-    feature_matrix = patch_features
-
-    return patch_coords, geo_dist_matrix, A, edge_index, edge_weight, feature_matrix
-
-
-
 def distances_from_center(graph, center):
     
     '''Function that takes a graph and the starting node and returns a list of distances 
@@ -122,6 +65,75 @@ def distances_from_center(graph, center):
 
 
 
+def generate_GNN_graph(patch_coords, patch_normals, patch_features):
+
+    '''Function that takes a set of points, with their label, coordinates and surface normals. Calculates for each point the 
+    geodesic distance to its n nearest neighbors and saves that information in a dictionary representing a graph. '''
+    
+    #Initialize Adjacency Matrix
+    n = len(patch_coords)
+    A = np.zeros((n,n), dtype=np.float64)
+
+    #Initialize K-Nearest-Neighbor Search
+    knn = NearestNeighbors(n_neighbors=10)
+    knn.fit(patch_coords)
+
+    #Initialize softmin, edge_data, edges
+    softmin = Softmin(dim = 0)
+    edge_data = {p:{} for p in range(len(patch_coords))}
+    edges = []
+
+    #loop through each point that is within the radius and find its nearest neighbors and their euclidean distance
+    for idx, point in enumerate(patch_coords):
+        dist, neighbors = knn.kneighbors([point], return_distance=True)
+                
+        # loop through the nearest neighbors, calculate their geodesic distance to the point chosen above
+        # Add the geodesic distance to the distance matrix
+
+        geo_dists_neighbors = []
+        
+        for index, neighbor in enumerate(neighbors[0]):
+            
+            #Approximation of the geodesic distance, taking the angle between the normals
+            geo_dist = dist[0][index]*(2-np.dot(patch_normals[idx], patch_normals[neighbor]))
+            geo_dists_neighbors.append(geo_dist)
+
+            #Fill geodesic distance value into the lookup dictionary
+            edge_data[idx][neighbor]={'gdist':geo_dist, 'edge_w':0}
+            edge_data[neighbor][idx]={'gdist':geo_dist, 'edge_w':0}
+
+            A[idx][neighbor] = 1
+            A[neighbor][idx] = 1
+
+            if (neighbor, idx) not in edges:
+                edges.append((idx, neighbor))
+
+        weights = softmin(torch.tensor(geo_dists_neighbors))
+        
+        for index, neighbor in enumerate(neighbors[0]):
+            edge_data[idx][neighbor]['edge_w'] = float(weights[index])
+            edge_data[neighbor][idx]['edge_w'] = float(weights[index])
+
+
+
+    #Initialize Edge Weights and Edge_Index
+    edge_weight = []
+    edge_index = [[],[]]
+    
+    for node1, node2 in edges: 
+        edge_index[0].append(node1)
+        edge_index[1].append(node2)
+        edge_weight.append(edge_data[node1][node2]['edge_w'])
+
+        
+    edge_index = np.asarray(edge_index)
+    edge_weight = np.asarray(edge_weight)
+    feature_matrix = patch_features
+
+    return patch_coords, edge_data, A, edge_index, edge_weight, feature_matrix
+
+
+
 
 
 def extract_surface_patch_GNN(coords, center_index, radius, features):
@@ -146,22 +158,14 @@ def extract_surface_patch_GNN(coords, center_index, radius, features):
 
 
     # generate a graph with the selected points
-    #start = time.time()
     graph = generate_simple_graph(first_sel, coords_sel, normals)
-    #end = time.time()
-    #print("Graph Generation: "+ str(end - start) + 's')
 
 
     # check for each point the GEODESIC distance to the center with djikstra
-    #start = time.time()
     dist_from_center = distances_from_center(graph, center_index)
-    #end = time.time()
-    #print("Distances from center: "+ str(end - start)+ 's')
 
 
     # Collect the indeces of the points that within the geodesic radius from the center point
-    #start = time.time()
-
     patch_indeces = []
     for key in dist_from_center:
         if dist_from_center[key]<=radius:
@@ -172,16 +176,9 @@ def extract_surface_patch_GNN(coords, center_index, radius, features):
     patch_normals = normals[patch_indeces]
     patch_features = features[patch_indeces]
     
-    #end = time.time()
-    #print("Extraction of patch members: "+ str(end - start)+ 's')
-
 
     # Generate a new graph including only the patch members
-    #start = time.time()
     patch_graph = generate_GNN_graph(patch_coords, patch_normals, patch_features)
-    #end = time.time()
-    #print("Generation of Patch Graph: " + str(end - start)+ 's')
-
    
     return patch_graph
 
