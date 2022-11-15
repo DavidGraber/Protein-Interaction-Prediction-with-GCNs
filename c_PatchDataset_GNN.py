@@ -1,11 +1,22 @@
 import numpy as np
 import os
 import torch
-from torch.utils.data import Dataset
+from torch_geometric.data import Dataset
 from f_helper_functions import load_object
 from torch_geometric.data import Data
 
 class PatchDataset(Dataset):
+
+    '''Custom dataset for grouping graphs extracted from protein surfaces into mini-batches.
+    Returns an instance of the torch_geometric.Data class which contains all information to 
+    describe a homogeneous graph:  
+    - node features x
+    - edge index 
+    - edge attributes (edge_weight)
+    - label of the graph (fitness level)
+    - the 3D-coordinates of all graph nodes'''
+
+
     def __init__(self, data_dir):
         self.data_dir = data_dir
         self.mutants = [mutant[0:4] for mutant in os.listdir(data_dir)]

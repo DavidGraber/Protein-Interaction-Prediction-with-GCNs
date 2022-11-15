@@ -2,7 +2,8 @@ import numpy as np
 
 class GraphPatch:
 
-    '''Class storing the data of an extracted surface patch graph, including the '''
+    '''Class storing the data of an extracted surface patch graph, including coordinates of the graph nodes, 
+    the features, the adjacency information, the edge_attributes and the fitness and the name of the mutant'''
 
     def __init__(self, feature_matrix, A, edge_index, edge_weight, edge_data, fitness_value, coords, mutant_name):
         self.coords = coords
