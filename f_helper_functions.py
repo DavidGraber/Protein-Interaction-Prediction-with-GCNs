@@ -9,21 +9,21 @@ def normalize_m11(array):
     array_norm = 2*(array - np.min(array))/(np.max(array)-np.min(array))-1
     return array_norm
 
-def normalize_columns_01(array):
-    array_norm = np.zeros_like(array)
-    for column in range(array.shape[1]):
-        to_be_normed = array[:,column]
-        column_norm = (to_be_normed - np.min(to_be_normed))/(np.max(to_be_normed)-np.min(to_be_normed))
-        array_norm[:,column] = column_norm
-    return array_norm
 
-def normalize_columns_m11(array):
-    array_norm = np.zeros_like(array)
-    for column in range(array.shape[1]):
-        to_be_normed = array[:,column]
-        column_norm = 2*(to_be_normed - np.min(to_be_normed))/(np.max(to_be_normed)-np.min(to_be_normed))-1
-        array_norm[:,column] = column_norm
-    return array_norm
+def normalize_featurewise(array):
+
+    if array.shape[1] != 16: 
+        raise Exception("Array must be of shape points x 16")
+
+    #Import a dictionary where the upper and lower limits of all 16 features are saved
+    limits = np.load('C:/Users/david/MT_data/feature_limits_dict.npy', allow_pickle=True).item()
+
+    for feature in range(16): 
+        to_be_normed = array[:,feature]
+        #column_norm = 2*(to_be_normed - limits[feature]['min'])/(limits[feature]['max'] - limits[feature]['min']) - 1
+        column_norm = (to_be_normed - limits[feature]['min'])/(limits[feature]['max'] - limits[feature]['min'])
+        array[:,feature] = column_norm
+    return array
 
 
 def cart_to_polar(cartesian_coords):
