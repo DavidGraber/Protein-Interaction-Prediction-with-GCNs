@@ -2,7 +2,7 @@ from Bio.PDB.PDBParser import PDBParser
 import numpy as np
 from f_parse_pdb import parse_pdb
 import os
-from f_extract_surface_patch_GNN import *
+from f_extract_surface_patch_diffpool import *
 from f_helper_functions import *
 from c_GraphPatch import GraphPatch
 
@@ -41,7 +41,7 @@ for i in range(1500):
         print(mutant_name, fitness[mutant_name])
     else:  
         # draw from scores close to zero
-        draw = np.random.uniform(min_fitness, 0.02)
+        draw = np.random.uniform(min_fitness, 0.01)
         score = min(scores, key=lambda x:abs(x-draw))
         mutant_name = mutants[scores.index(score)]
         mutants.remove(mutant_name)
@@ -57,6 +57,7 @@ for i in range(1500):
     # Load the features of the mutants
     features = np.load(os.path.join(source_dir_feat, features_filename))
     features = features[:, 16:32]
+    os.chdir('c:\\Users\\david\\pyproj\\pyg\\mt')
     features = normalize_featurewise(features)
 
     # Load the predcoords of the mutant
@@ -91,19 +92,19 @@ for i in range(1500):
     #print(center_index)
 
     # Extract the patch as graph
-    coords, edge_data, A, edge_index, edge_weight, feature_matrix = extract_surface_patch_GNN(predcoords, center_index, 12, features)
+    pos, adj, w, x = extract_surface_patch_diffpool(predcoords, center_index, 12, features, padding = 1300)
 
     ##### For classification task #####
     if binder:
-        fitness_value = 1
+        y = 1
     else:
-        fitness_value = 0
+        y = 0
     ###################################
     
-    print(fitness_value)
+    print(y)
     print()
-    patch = GraphPatch(feature_matrix, A, edge_index, edge_weight, edge_data, fitness_value, coords, mutant_name)
+    patch = GraphPatch(x, adj, w, y, pos, mutant_name)
 
-    os.chdir("C:\\Users\\david\\MT_data\\extracted_patches\\mutant_graphs_classification")
+    os.chdir("C:\\Users\\david\\MT_data\\extracted_patches\\mutant_graphs_diffpool")
     filename = '{m}_GraphPatch.pkl'.format(m=mutant_name)
     save_object(patch, filename)
