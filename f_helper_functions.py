@@ -16,7 +16,7 @@ def normalize_featurewise(array):
         raise Exception("Array must be of shape points x 16")
 
     #Import a dictionary where the upper and lower limits of all 16 features are saved
-    limits = np.load('C:/Users/david/MT_data/feature_limits_dict.npy', allow_pickle=True).item()
+    limits = np.load('feature_limits_dict.npy', allow_pickle=True).item()
 
     for feature in range(16): 
         to_be_normed = array[:,feature]
