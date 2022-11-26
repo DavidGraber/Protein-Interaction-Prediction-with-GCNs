@@ -28,5 +28,5 @@ def visualize_points(pos, edge_index=None, index=None):
        mask[index] = True
        plt.scatter(pos[~mask, 0], pos[~mask, 1], s=10.0, color='lightgray', zorder=1000)
        plt.scatter(pos[mask, 0], pos[mask, 1], s=10.0, zorder=1000)
-    plt.axis('off')
+    plt.axis('on')
     plt.show()
