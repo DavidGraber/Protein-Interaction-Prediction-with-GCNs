@@ -31,12 +31,12 @@ class PatchDataset(Dataset):
         path = os.path.join(self.data_dir, self.mutants[idx]+'_GraphPatch.pkl')
         patch = load_object(path)
         
-        x = torch.from_numpy(patch.x)
+        x = torch.from_numpy(patch.x).float()
         adj = torch.from_numpy(patch.adj).float()
         #edge_index=torch.from_numpy(patch.edge_index)
-        w=torch.from_numpy(patch.w)
+        w=torch.from_numpy(patch.w).float()
         y=torch.from_numpy(np.asarray(patch.y)).long()
-        pos=torch.from_numpy(patch.pos)
+        pos=torch.from_numpy(patch.pos).float()
         m = self.mutants[idx]
 
         return  Data(x=x, edge_index=None, edge_attr = None, y=y, pos = pos, adj = adj, w = w, mutant = m )
