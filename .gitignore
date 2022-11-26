@@ -3,10 +3,12 @@ __pycache__
 model_graph_classification.ipynb
 model_diffpool_original.ipynb
 model_graph_regr.ipynb
+model_diffpool_for_toygraph.ipynb
 c_PatchDataset_classification.py
 f_extract_surface_patch_GNN.py
 
 toygraph.npy
 write_docker_list.ipynb
 *test*
+*toy*
 *.pt
