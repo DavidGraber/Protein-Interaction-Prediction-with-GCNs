@@ -12,3 +12,10 @@ write_docker_list.ipynb
 *test*
 *toy*
 *.pt
+
+*exploration*
+*kmeans*
+*model*
+*data_subset*
+*PatchDataset*
+*f_visualization_functions*

@@ -14,7 +14,7 @@ def visualize_mesh(pos, face):
     plt.show()
 
 
-def visualize_points(pos, edge_index=None, index=None):
+def visualize_points(pos, edge_index=None, index=None, subset = None):
     fig = plt.figure(figsize=(4, 4))
     if edge_index is not None:
         for (src, dst) in edge_index.t().tolist():
@@ -23,6 +23,8 @@ def visualize_points(pos, edge_index=None, index=None):
              plt.plot([src[0], dst[0]], [src[1], dst[1]], linewidth=1, color='black')
     if index is None:
         plt.scatter(pos[:, 0], pos[:, 1], s=10.0, zorder=1000)
+        if subset != None:     
+            plt.scatter(pos[subset, 0], pos[subset, 1], s = 10.0, zorder=1000, color = 'red')
     else:
        mask = torch.zeros(pos.size(0), dtype=torch.bool)
        mask[index] = True

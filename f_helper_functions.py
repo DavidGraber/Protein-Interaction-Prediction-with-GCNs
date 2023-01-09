@@ -20,8 +20,8 @@ def normalize_featurewise(array):
 
     for feature in range(16): 
         to_be_normed = array[:,feature]
-        #column_norm = 2*(to_be_normed - limits[feature]['min'])/(limits[feature]['max'] - limits[feature]['min']) - 1
-        column_norm = (to_be_normed - limits[feature]['min'])/(limits[feature]['max'] - limits[feature]['min'])
+        column_norm = 2*(to_be_normed - limits[feature]['min'])/(limits[feature]['max'] - limits[feature]['min']) - 1
+        #column_norm = (to_be_normed - limits[feature]['min'])/(limits[feature]['max'] - limits[feature]['min'])
         array[:,feature] = column_norm
     return array
 
