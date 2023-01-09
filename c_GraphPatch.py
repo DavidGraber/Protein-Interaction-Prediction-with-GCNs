@@ -1,17 +1,18 @@
 import numpy as np
+import torch
 
 class GraphPatch:
 
     '''Class storing the data of an extracted surface patch graph, including coordinates of the graph nodes (pos), 
-    the features (x), the adjacency information (adj), the edge weights (w) and the fitness (y) and the name of the mutant'''
+    the features (x), the adjacency information (edge_index), the edge weights (edge_attr) and the fitness (y) and the name of the mutant'''
 
-    def __init__(self, x, adj, w, y, pos, mutant_name):
-        self.pos = pos
-        self.adj = adj
-        self.w = w
-        self.x = x
-        self.y = np.asarray(y, dtype=np.float64)
-        self.mutant = mutant_name
+    def __init__(self, x, edge_index, edge_attr, y, pos, mutant_name):
+        self.pos        = torch.from_numpy(pos).float()
+        self.edge_index = edge_index
+        self.edge_attr  = edge_attr
+        self.x          = torch.from_numpy(x).float()
+        self.y          = torch.from_numpy(np.asarray(y)).float()  
+        self.mutant     = mutant_name
 
     def num_nodes(self):
         return len(self.pos)
@@ -23,11 +24,12 @@ class GraphPatch:
         string = '\
             Number of Nodes: {n}\n\
             Features: {f}\n\
-            Adjacency Matrix: {a}\n\
+            Edge_Index: {i}\n\
             Edge Weights (Softmin Geodesic Distances): {we}\n\
             Label: {fit}\n\
             Coordinates of Points: {c}\n\
             Mutant Name: {name}'\
-            .format(n = self.pos.shape[0], f = self.x.shape, a = self.adj.shape, we = self.w.shape, \
+            .format(n = self.pos.shape[0], f = self.x.shape, we = self.edge_attr.shape, \
             i = self.edge_index.shape, fit=self.y, c = self.pos.shape, name = self.mutant)
+
         return string
