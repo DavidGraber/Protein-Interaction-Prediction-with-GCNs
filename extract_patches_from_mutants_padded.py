@@ -25,6 +25,7 @@ min_fitness = min(fitness.values())
 max_fitness = max(fitness.values())
 scores = list(fitness.values())
 mutants = list(fitness.keys())
+print(len(mutants))
 
 for mutant_name in mutants:
 
@@ -65,7 +66,6 @@ for mutant_name in mutants:
                 if 4.973-tolerance < np.linalg.norm(point-C_GLU27) < 4.973+tolerance: # C of GLU27 dist 4.973 (190)
                     if 5.072-tolerance < np.linalg.norm(point-CA_LYS28) < 5.072+tolerance: # CA of LYS28 dist 5.072 (198)
                         center_coords.append(list(predcoords[i])) 
-        #print(center_coords)
         tolerance += 0.1
 
     center_index = np.where(predcoords == center_coords[0])[0][0]
@@ -84,7 +84,6 @@ for mutant_name in mutants:
     pos[:,2]=(pos[:,2]-center_z)/12
 
     y = fitness[mutant_name]
-    
 
     patch = GraphPatch(x, edge_index, edge_attr, y, pos, mutant_name)
 
