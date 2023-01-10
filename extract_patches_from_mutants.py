@@ -83,6 +83,6 @@ for mutant_name in mutants:
 
     patch = GraphPatch(x, edge_index, edge_attr, y, pos, mutant_name)
 
-    os.chdir("C:\\Users\\david\\MT_data\\extracted_patches\\mutant_graphs_all_norm")
+    os.chdir("C:\\Users\\david\\MT_data\\extracted_patches\\mutant_graphs_all")
     filename = '{m}_GraphPatch.pkl'.format(m=mutant_name)
     save_object(patch, filename)
