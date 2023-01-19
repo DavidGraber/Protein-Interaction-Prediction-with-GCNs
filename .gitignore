@@ -1,11 +1,6 @@
 __pycache__
-
-model_graph_classification.ipynb
-model_diffpool_original.ipynb
-model_graph_regr.ipynb
-model_diffpool_for_toygraph.ipynb
-c_PatchDataset_classification.py
-f_extract_surface_patch_GNN.py
+c_GraphPatch_GCN_regr.py
+c_PatchDataset_sparse.py
 
 toygraph.npy
 write_docker_list.ipynb
@@ -17,5 +12,4 @@ write_docker_list.ipynb
 *kmeans*
 *model*
 *data_subset*
-*PatchDataset*
 *f_visualization_functions*
