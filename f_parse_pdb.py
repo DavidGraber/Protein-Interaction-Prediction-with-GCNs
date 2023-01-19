@@ -3,6 +3,11 @@ import numpy as np
 
 def parse_pdb(parser, protein_id, file, chain_number=0, numbering_offset=0):
     
+    ''' This function uses the PDBParser from BioPython to import a PDB file 
+    and extract the residues, the atom types and atom coordinates of the protein.
+    The residues with their atoms are saved in a double dictionary, the atom coords
+    are saved in a numpy array.'''
+
     protein_id = parser.get_structure(protein_id, file)
     models = list(protein_id.get_models())
     chains = list(models[0].get_chains())
