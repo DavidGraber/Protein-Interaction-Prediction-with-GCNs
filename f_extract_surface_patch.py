@@ -10,7 +10,7 @@ from torch_geometric.utils import dense_to_sparse
 def generate_simple_graph(indeces, coords_sel, normals):
 
     '''Function that takes a set of points, with their label, coordinates and surface normals. Calculates for each point the 
-    geodesic distance to its n nearest neighbors and saves that information in a dictionary representing a graph. '''
+    geodesic distance to its 10 nearest neighbors and saves that information in a double dictionary representing a graph.'''
         
     graph = {p:{} for p in indeces}
 
@@ -67,7 +67,9 @@ def distances_from_center(graph, center):
 def generate_GNN_graph(patch_coords, patch_normals, patch_features):
 
     '''Function that takes a set of points, with their features, coordinates and surface normals. Calculates for each point the 
-    geodesic distance to its n nearest neighbors and saves that information in a dictionary representing a graph. '''
+    geodesic distance to its 10 nearest neighbors using an approximatin based on the surface normals. An adjacency matrix is 
+    generated to save the edges connecting each point to its 10 nearest neighbors. The corresponding geodesic distances are 
+    saved in an edge weight matrix. Both matrices are converted to sparse representations using dense_to_sparse()'''
     
     
     #Initialize Adjacency Matrix and Weight Matrix
@@ -123,6 +125,12 @@ def generate_GNN_graph(patch_coords, patch_normals, patch_features):
 
 
 def extract_surface_patch_GCN(coords, center_index, radius, features):
+
+    '''This function takes the surface point cloud with its features and coordinates, the center for 
+    patch extraction and the desired geodesic radius and returns the a circular patch of the given 
+    geodesic radius drawn around the given patch center and modelled as a graph with edge index, 
+    adjacency matrix, edge_weights and features.'''
+
     
     pointcloud = o3d.geometry.PointCloud()
     pointcloud.points = o3d.utility.Vector3dVector(coords)
