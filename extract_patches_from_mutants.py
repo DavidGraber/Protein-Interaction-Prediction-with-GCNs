@@ -37,7 +37,7 @@ for mutant_name in mutants:
     # Load the features of the mutants
     features = np.load(os.path.join(source_dir_feat, features_filename))
     features = features[:, 16:32]
-    os.chdir('c:\\Users\\david\\pyproj\\pyg\\mt')
+    os.chdir('c:\\Users\\david\\pyproj\\pyg\\mt') 
     features = normalize_featurewise(features)
 
     # Load the predcoords of the mutant
