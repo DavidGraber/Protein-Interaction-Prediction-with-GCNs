@@ -12,6 +12,10 @@ def normalize_m11(array):
 
 def normalize_featurewise(array):
 
+    '''Used to normalize feature matrices between -1 and 1 in a column-wise manner, so that each feature 
+    is normalized independently from the other features in the dataset. In this min-max scaling, the min and
+    max values represent the lowest and highest values found for this feature in the complete dataset'''
+
     if array.shape[1] != 16: 
         raise Exception("Array must be of shape points x 16")
 
