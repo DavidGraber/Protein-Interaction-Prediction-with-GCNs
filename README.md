@@ -52,6 +52,10 @@ The following code is used to extract circular graph patches from all mutants an
 #### c_GraphPatch.py
 >Definition of a custom python Class designed to store all relevant data to describe an extracted surface patch graph, including coordinates of the graph nodes (pos), the features (x), the adjacency information (edge_index), the edge weights (edge_attr) and the fitness (y) and the name of the mutant'''
 
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/112872366/213656085-c5e943ad-4ecd-4ea8-9a50-05bb12e075f4.png">
+</p>
+
 ***
 
 ## Dataset Generation
