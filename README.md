@@ -16,7 +16,9 @@ Using a dataset of protein G subunit B1 (GB1) mutants with experimentally determ
 - The 3D-structure of the mutants was predicted with ColabFold, an adapted version of AlphaFold2 (https://github.com/sokrypton/ColabFold). 
 - Using the resulting PDB files, a molecular surface with geometric and chemical features was computed using dMaSIF (https://github.com/FreyrS/dMaSIF). The output is a point cloud describing a protein surface, where each point has been assigned a vector of 16 learned features.
 
-***
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/112872366/213655092-bc23b95f-d2e7-4a8b-b5e6-e479c74c3927.PNG">
+</p>
 
 ## Patch Extraction 
 The following code is used to extract circular graph patches from all mutants and save them in a custom _GraphPatch_ python Class 
