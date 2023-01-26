@@ -1,6 +1,5 @@
 __pycache__
 c_GraphPatch_GCN_regr.py
-c_PatchDataset_sparse.py
 
 list_uniform_selection.npy
 toygraph.npy
