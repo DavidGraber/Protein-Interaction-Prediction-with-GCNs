@@ -9,6 +9,9 @@ This repository contains the code of three graph neural network models that appl
 
 Using a dataset of protein G subunit B1 (GB1) mutants with experimentally determined binding affinities, we extract a surface patch from the IgG-binding region of all mutants. This patch contains the main interacting amino acid residues that are responsible for the binding interaction in the WT GB1 protein. To retain the full scale of the geometric properties of the surface patches, the patches are modelled as graphs and are used to train a Convolutional Graph Neural Network to create low-dimensional embeddings that are useful to predict the IgG-binding capacity of each mutant. 
 
+The input data can be downloaded here: 
+https://zhaw-my.sharepoint.com/:f:/g/personal/grabeda2_students_zhaw_ch/Ep_1Psh4idtFh2susnXemHgBhcAUsfB2ZWxgDHK0lHhEyg?e=UG55uq
+
 ***
 
 ## Input Data Generation
