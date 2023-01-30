@@ -11,12 +11,13 @@ from torch_geometric.utils import to_dense_adj
 class PatchDataset(Dataset):
 
     '''Custom dataset for generation of datasets of graphs extracted from protein surfaces.
-    The input data directories should contain instances of the GraphPatch class stored as pkl files with the characters
+    The input data directory should contain instances of the GraphPatch class stored as pkl files with the characters
     0-4 of the filename indicating the complex name. The function get_item returns an instance of the
-    torch_geometric.Data class which contains a couple of two graphs with the following information:  
+    torch_geometric.Data class which contains a graph with the following information:  
     - node features x
-    - adjacency matrix
+    - adjacency matrix (dense)
     - label of the graph
+    - fitness value of the mutant the patch has been extracted from
     '''
 
     def __init__(self, data_dir): 

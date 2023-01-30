@@ -4,7 +4,7 @@ import torch
 class GraphPatch:
 
     '''Class storing the data of an extracted surface patch graph, including coordinates of the graph nodes (pos), 
-    the features (x), the adjacency information (edge_index), the edge weights (edge_attr) and the fitness (y) and the name of the mutant'''
+    the features (x), the adjacency information (edge_index), the edge weights (edge_attr), the fitness (y) and the name of the mutant'''
 
     def __init__(self, x, edge_index, edge_attr, y, pos, mutant_name):
         self.pos        = torch.from_numpy(pos).float()
