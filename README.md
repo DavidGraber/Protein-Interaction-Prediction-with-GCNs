@@ -49,7 +49,7 @@ The following code is used to extract circular graph patches from all mutants an
 #### f_extract_surface_patch_padded.py & extract_patches_from_mutants_padded.py
 > These files are identical to the unpadded version described above, except that they contain an additional code for padding graphs. All graphs were padded until they reached the number of nodes of the largest graph in the dataset. If a graph was smaller than the largest graph in the dataset, additional points were introduced between two randomly selected connected points of the graph until the graph reached the desired size. The coordinates and the surface normal of the new point were computed as a weighted average from its nearest neighbors. The features of the new point were computed using the knn interpolate function of the PyTorch Geometric library. 
 
-#### c_GraphPatch.py
+#### c_GraphPatch_GCN_regr.py
 >Definition of a custom python Class designed to store all relevant data to describe an extracted surface patch graph, including coordinates of the graph nodes (pos), the features (x), the adjacency information (edge_index), the edge weights (edge_attr) and the fitness (y) and the name of the mutant'''
 
 <p align="center">
